@@ -21,6 +21,8 @@ Formatting is not supported.
 
 Highlights are created in a book with author and title from the plugin settings.
 
+![Export to Readwise with note by slash command](./export-to-readwise-with-note.png)
+
 ## Settings
 
 You can set the Readwise access token, author and book title.
