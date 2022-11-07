@@ -4,10 +4,14 @@ Send blocks to Readwise Reader as highlights.
 
 ## Features
 
-- Send a block to Readwise.
-- Send a block with a note to Readwise.
+- Export a block to Readwise.
+- Export a block with a note to Readwise.
+- Export a page to Reader
+- Save an URL to Reader
 
 ## Functions
+
+### Export blocks
 
 You can send the current block as a highlight to Readwise with the 
 slash command "Export as highlight to Readwise" or from the context menu
@@ -22,6 +26,19 @@ Formatting is not supported.
 Highlights are created in a book with author and title from the plugin settings.
 
 ![Export to Readwise with note by slash command](./export-to-readwise-with-note.png)
+
+### Export page to Reader
+
+Use the command palette "Export Page to Reader". When called the plugin will the
+author from settings, a fake url (because logseq urls are not accepted), the
+page title and the content blocks as paragraphs to Reader. The HTML the plugin
+sends is very simple for now, but can be improved. Please provide feedback about
+this in Discussions.
+
+### Save URL to Reader
+
+Use the command palette "Save URL to Reader" or the block context menu to Save
+a URL to Reader".
 
 ## Settings
 
