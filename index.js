@@ -56,7 +56,7 @@ const main = async () => {
     }
 
     let exportPageToReader = async (e) => {
-        const {accessToken, author, title} = logseq.settings
+        const {accessToken, author} = logseq.settings
         if (!accessToken) {
             setTimeout(() => logseq.UI.showMsg('First fill in Readwise access token in plugin settings', 'error'), 1)
             return
@@ -75,20 +75,26 @@ const main = async () => {
             author,
             title: page.originalName,
         }
+        try {
+            const response = await sendDataToReader(data, accessToken)
+                .then(response => response.json())
+            console.log("Export to Reader", response)
+            const properties = pageBlocks[0].properties;
+            if (properties && Object.keys(properties).length && properties.constructor === Object) {
+                await logseq.Editor.upsertBlockProperty(pageBlocks[0].uuid, "readwise-url", response.url)
+            } else {
+                await logseq.Editor.prependBlockInPage(page.name, "", {
+                    properties: {
+                        "readwise-url": response.url
+                    }
+                })
+            }
 
-        await sendDataToReader(data, accessToken)
-            .then(response => response.json())
-            .then(data => {
-                console.log("Export to Reader", data);
-                return data
-            })
-            .then(() => {
-                setTimeout(() => logseq.UI.showMsg('Page exported', 'success'), 1)
-            })
-            .catch(e => {
-                console.error(e)
-                setTimeout(() => logseq.UI.showMsg('Export of page failed: ' + e, 'error'), 1)
-            })
+            setTimeout(() => logseq.UI.showMsg('Page exported', 'success'), 1)
+        } catch (e) {
+            console.error(e)
+            setTimeout(() => logseq.UI.showMsg('Export of page failed: ' + e, 'error'), 1)
+        }
     }
 
     let exportHighlightToReadwise = async (e) => {
