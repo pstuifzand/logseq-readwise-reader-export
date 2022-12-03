@@ -27,6 +27,35 @@ Highlights are created in a book with author and title from the plugin settings.
 
 ![Export to Readwise with note by slash command](./export-to-readwise-with-note.png)
 
+#### Create mastery flashcards
+
+With `.qa` tag it is possible to create flashcards in Readwise directly from
+Logseq. Normally highlights are on the line itself and the first child node is
+sent as a note for the highlight.
+
+With `.qa` tag you do this as well, but format the note itself in a special way.
+Start with `.qa` press Shift+Enter, to add a new line, write your question,
+Shift+Enter for a new line and add the answer of the flashcard. All combined
+that will look like this:
+
+```
+- [highlight or other text]
+  - .qa
+    [question]
+    [answer]
+```
+
+Real example:
+
+```
+- I just found how to create flashcards in Readwise with tags.
+    - .qa
+      How you can you create flashcards in Readwise from tags?
+      With the .qa tag and a specially formatted note.
+```
+
+      
+
 ### Export page to Reader
 
 Use the command palette "Export Page to Reader". When called the plugin will the
@@ -38,7 +67,7 @@ this in Discussions.
 ### Save URL to Reader
 
 Use the command palette "Save URL to Reader" or the block context menu to Save
-a URL to Reader".
+a URL to Reader.
 
 ## Settings
 
