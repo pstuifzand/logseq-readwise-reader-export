@@ -15,7 +15,7 @@
   "author": "Peter Stuifzand",
   "license": "MIT",
   "dependencies": {
-    "@logseq/libs": "0.0.10"
+    "@logseq/libs": "^0.0.14"
   },
   "logseq": {
     "id": "logseq-readwise-reader-export",
