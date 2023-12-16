@@ -18,7 +18,7 @@
     "@logseq/libs": "^0.0.14"
   },
   "logseq": {
-    "id": "logseq-readwise-reader-export2",
+    "id": "logseq-readwise-reader-export",
     "title": "Readwise Reader Export",
     "icon": "./icon.png"
   },
