@@ -8,6 +8,7 @@ Send blocks to Readwise Reader as highlights.
 - Export a block with a note to Readwise.
 - Export a page to Reader
 - Save an URL to Reader
+- Fetch daily review from Readwise
 
 ## Functions
 
@@ -68,6 +69,10 @@ this in Discussions.
 
 Use the command palette "Save URL to Reader" or the block context menu to Save
 a URL to Reader.
+
+### Fetch daily review
+
+Use the slash command "Fetch daily review" to fetch today's review from Readwise.
 
 ## Settings
 
