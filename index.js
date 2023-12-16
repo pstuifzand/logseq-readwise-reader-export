@@ -140,9 +140,54 @@ const main = async () => {
             })
     };
 
+    const fetchDailyReview = async (e) => {
+        const {accessToken, author, title} = logseq.settings
+        if (!accessToken) {
+            setTimeout(() => logseq.UI.showMsg('First fill in Readwise access token in plugin settings', 'error'), 1)
+            return
+        }
+        console.log("Fetching daily review", e)
+        const result = await fetch('https://readwise.io/api/v2/review/', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + accessToken,
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Fetched daily review", data);
+                return data
+            })
+
+        // Insert data into current page
+        logseq.Editor.insertBatchBlock(e.uuid, [
+            {
+                content: "#[[Daily Review]]\nreview-url:: " + result.review_url + "\n",
+                children: result.highlights.map(highlight => {
+                    let properties = {
+                        'author': '[[' + highlight.author + ']]',
+                        'title': '[[' + highlight.title + ' (highlights)]]',
+                    };
+                    if (highlight.note) {
+                        properties['note'] = highlight.note
+                    }
+                    if (highlight.highlight_url) {
+                        properties['highlight-url'] = highlight.highlight_url
+                    }
+                    return {
+                        content: highlight.text,
+                        properties: properties
+                    }
+                })
+            },
+        ])
+    };
+
     logseq.Editor.registerBlockContextMenuItem('Export as highlight to Readwise', exportHighlightToReadwise)
     logseq.Editor.registerSlashCommand('Export as highlight to Readwise', exportHighlightToReadwise)
     logseq.Editor.registerBlockContextMenuItem('Save URL to Reader', exportUrlToReader)
+    logseq.Editor.registerSlashCommand('Fetch daily review', fetchDailyReview)
     logseq.App.registerCommandPalette({
         key: 'export-page-to-reader',
         label: 'Export page to Reader',
