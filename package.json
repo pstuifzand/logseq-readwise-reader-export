@@ -1,6 +1,6 @@
 {
   "name": "logseq-readwise-reader-export",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Readwise Reader export",
   "main": "dist/index.html",
   "targets": {
