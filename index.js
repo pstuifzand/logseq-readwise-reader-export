@@ -73,10 +73,10 @@ const main = async () => {
         const graphName = (await logseq.App.getCurrentGraph()).name
         const data = {
             // url: 'logseq://graph/'+encodeURIComponent(graphName)+'?page='+encodeURIComponent(page.originalName),
-            url: 'https://example.com/',
+            url: 'https://example.com/', // FIXME: use logseq:// url when it's supported
             html: pageContent,
             author,
-            title: page.originalName,
+            source: page.originalName,
         }
         try {
             const response = await sendDataToReader(data, accessToken)
