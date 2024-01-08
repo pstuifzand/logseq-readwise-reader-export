@@ -73,6 +73,7 @@ a URL to Reader.
 ### Fetch daily review
 
 Use the slash command "Fetch daily review" to fetch today's review from Readwise.
+This is also possible from the command palette.
 
 ## Settings
 

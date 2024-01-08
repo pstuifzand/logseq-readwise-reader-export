@@ -16,12 +16,19 @@ const main = async () => {
         })
     }
 
+    const accessTokenMiddleware = (f) => {
+        return async (e) => {
+            const {accessToken} = logseq.settings
+            if (!accessToken) {
+                setTimeout(() => logseq.UI.showMsg('First fill in Readwise access token in plugin settings', 'error'), 1)
+                return
+            }
+            return await f(e)
+        }
+    }
+
     let exportUrlToReader = async (e) => {
         const {accessToken} = logseq.settings
-        if (!accessToken) {
-            setTimeout(() => logseq.UI.showMsg('First fill in Readwise access token in plugin settings', 'error'), 1)
-            return
-        }
 
         if (!e.uuid) {
             e = await logseq.Editor.getCurrentBlock()
@@ -57,10 +64,6 @@ const main = async () => {
 
     let exportPageToReader = async (e) => {
         const {accessToken, author} = logseq.settings
-        if (!accessToken) {
-            setTimeout(() => logseq.UI.showMsg('First fill in Readwise access token in plugin settings', 'error'), 1)
-            return
-        }
         const page = await logseq.Editor.getCurrentPage()
         const pageBlocks = await logseq.Editor.getPageBlocksTree(page.originalName)
         const pageContent = pageBlocks.map(value => {
@@ -99,10 +102,6 @@ const main = async () => {
 
     let exportHighlightToReadwise = async (e) => {
         const {accessToken, author, title} = logseq.settings
-        if (!accessToken) {
-            setTimeout(() => logseq.UI.showMsg('First fill in Readwise access token in plugin settings', 'error'), 1)
-            return
-        }
         const block = await logseq.Editor.getBlock(e.uuid, {
             includeChildren: true
         })
@@ -141,11 +140,7 @@ const main = async () => {
     };
 
     const fetchDailyReview = async (e) => {
-        const {accessToken, author, title} = logseq.settings
-        if (!accessToken) {
-            setTimeout(() => logseq.UI.showMsg('First fill in Readwise access token in plugin settings', 'error'), 1)
-            return
-        }
+        const {accessToken} = logseq.settings
         console.log("Fetching daily review", e)
         const result = await fetch('https://readwise.io/api/v2/review/', {
             method: 'get',
@@ -161,7 +156,7 @@ const main = async () => {
             })
 
         // Insert data into current page
-        logseq.Editor.insertBatchBlock(e.uuid, [
+        await logseq.Editor.insertBatchBlock(e.uuid, [
             {
                 content: "#[[Daily Review]]\nreview-url:: " + result.review_url + "\n",
                 children: result.highlights.map(highlight => {
@@ -184,19 +179,25 @@ const main = async () => {
         ])
     };
 
-    logseq.Editor.registerBlockContextMenuItem('Export as highlight to Readwise', exportHighlightToReadwise)
-    logseq.Editor.registerSlashCommand('Export as highlight to Readwise', exportHighlightToReadwise)
-    logseq.Editor.registerBlockContextMenuItem('Save URL to Reader', exportUrlToReader)
-    logseq.Editor.registerSlashCommand('Fetch daily review', fetchDailyReview)
+    logseq.Editor.registerBlockContextMenuItem('Export as highlight to Readwise', accessTokenMiddleware(exportHighlightToReadwise))
+    logseq.Editor.registerSlashCommand('Export as highlight to Readwise', accessTokenMiddleware(exportHighlightToReadwise))
+    logseq.Editor.registerBlockContextMenuItem('Save URL to Reader', accessTokenMiddleware(exportUrlToReader))
+    logseq.Editor.registerSlashCommand('Fetch daily review', accessTokenMiddleware(fetchDailyReview))
+
     logseq.App.registerCommandPalette({
         key: 'export-page-to-reader',
         label: 'Export page to Reader',
-    }, exportPageToReader)
+    }, accessTokenMiddleware(exportPageToReader))
 
     logseq.App.registerCommandPalette({
         key: 'save-url-to-reader',
         label: 'Save URL to Reader',
-    }, exportUrlToReader)
+    }, accessTokenMiddleware(exportUrlToReader))
+
+    logseq.App.registerCommandPalette({
+        key: 'fetch-daily-review',
+        label: 'Fetch daily review',
+    }, accessTokenMiddleware(fetchDailyReview))
 }
 
 logseq.ready(main).catch(console.error);
