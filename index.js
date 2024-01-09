@@ -76,7 +76,7 @@ const main = async () => {
             url: 'https://example.com/', // FIXME: use logseq:// url when it's supported
             html: pageContent,
             author,
-            source: page.originalName,
+            title: page.originalName,
         }
         try {
             const response = await sendDataToReader(data, accessToken)
@@ -162,7 +162,7 @@ const main = async () => {
                 children: result.highlights.map(highlight => {
                     let properties = {
                         'author': '[[' + highlight.author + ']]',
-                        'title': '[[' + highlight.title + ' (highlights)]]',
+                        'source': '[[' + highlight.title + ' (highlights)]]',
                     };
                     if (highlight.note) {
                         properties['note'] = highlight.note
